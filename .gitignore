@@ -1,0 +1,4 @@
+.config/nixos-manager/hardware-configuration.nix
+.config/home-manager/.home.nix.swp
+.git
+
