@@ -1,34 +1,48 @@
 { config, pkgs, ... }:
 
 {
-	# Указываем драйверы X11
-	services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
+  ########################
+  # Kernel & firmware
+  ########################
+  hardware.enableRedistributableFirmware = true;
 
-	hardware.amdgpu.enable = true;
+  boot.kernelModules = [ "amdgpu" ];
 
-	hardware.graphics = {
-		enable = true;       # Включаем поддержку OpenGL/Mesa
-		enable32Bit = true;  # Для 32-битных игр и приложений (например, Steam)
-	};
+  ########################
+  # OpenGL / Vulkan
+  ########################
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # Steam / Proton
+    extraPackages = with pkgs; [
+      amdvlk
+      rocmPackages.clr.icd
+    ];
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
+    ];
+  };
 
-	# Для ноутбуков с Intel + AMD (PRIME Render Offload)
-	# Настройка PRIME Render Offload (переключение между Intel и AMD)
-	# Работает по аналогии с NVIDIA, но проще.
-	# Обычно Intel используется для энергосбережения, а AMD – для игр/графики.
-	
-	# Должно работать из коробки, но есть будут проблемы, то можно попробовать включить PRIME
-	#hardware.amdgpu.prime = {
-	#  intelBusId = "PCI:0:2:0";   # Шина Intel GPU (уточняется через lspci)
-	#  amdBusId = "PCI:1:0:0";		# Шина AMD GPU (также проверяется через lspci)
-	#  offload.enable = true;      # Включаем возможность запускать программы на AMD
-	#};
+  ########################
+  # Mesa (актуально для RDNA3)
+  ########################
+  environment.systemPackages = with pkgs; [
+    mesa
+    mesa-demos
+    vulkan-tools
+    vulkan-validation-layers
+    vulkan-loader
+    radeontop
+    libva
+    libva-utils
+  ];
 
-	environment.systemPackages = with pkgs; [
-		libva                  # Общая библиотека VA-API
-		libva-utils            # Тестовые утилиты (vainfo)
-		mesa                   # OpenGL/Vulkan драйверы для AMD/Intel
-		mesa_drivers           # Основные драйверы Mesa
-		vaapiVdpau             # VA-API → VDPAU мост для видео
-		libvdpau-va-gl         # OpenGL → VDPAU/VA-API совместимость
-	];
+  ########################
+  # Environment (важно!)
+  ########################
+  environment.variables = {
+    AMD_VULKAN_ICD = "RADV";
+    RADV_PERFTEST = "aco";
+    MESA_GL_VERSION_OVERRIDE = "4.6";
+  };
 }
