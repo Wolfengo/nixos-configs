@@ -29,7 +29,7 @@
         
         # Поддержка Vulkan API для игр и 3D-графики
         # Vulkan API support for games and 3D graphics
-        ./modules/videodrivers/vulcan.nix
+        # ./modules/videodrivers/vulcan.nix
 
         # --- Sound/Звук ---
         # Современный звуковой сервер (замена PulseAudio)
@@ -56,7 +56,7 @@
         # --- Fonts/Шрифты ---
         # Установка системных шрифтов (раскомментировать при необходимости)
         # System fonts installation (uncomment if needed)
-        #./modules/desktop/fonts.nix
+        # ./modules/desktop/fonts.nix
 
         # --- Systems/Системные ---
         # Сетевые настройки (WiFi, сетевые интерфейсы)
@@ -69,7 +69,7 @@
         
         # Настройки файловых систем (монтирование дисков)
         # Filesystem settings (disk mounting) - ЗАКОММЕНТИРОВАН
-        #./modules/system/filesystems.nix
+        # ./modules/system/filesystems.nix
         
         # Установка системных пакетов (vim, git, утилиты)
         # System packages installation (vim, git, utilities)
@@ -78,6 +78,12 @@
         # SSH сервер (раскомментировать для удалённого доступа)
         # SSH server (uncomment for remote access)
         #./modules.system/SSH.nix
+
+  		./modules/system/kernel.nix
+  		./modules/system/firmware.nix
+  		# ./modules/system/sysctl.nix
+  		./modules/system/power.nix
+  		./modules/system/gaming.nix
     ];
 
     # Версия конфигурации NixOS (НЕ МЕНЯТЬ при обновлении!)
